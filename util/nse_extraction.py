@@ -7,9 +7,12 @@ symbol = "RELIANCE"
 url = nse_equity_url + symbol
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36'}
 print("before extraction")
-response = requests.get(url='https://www.nseindia.com/market-data/live-equity-market',headers=headers)
+with requests.session() as s:
 
-print(response)
-soup = BeautifulSoup(response.text, "html.parser")
-print(soup)
+    response = s.get(url=url,headers=headers)
+    response = s.get(url=url,headers=headers)
+
+    # print(response)
+    soup = BeautifulSoup(response.text, "html.parser")
+    print(soup)
 print("After extraction")
