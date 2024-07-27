@@ -1,18 +1,39 @@
-import requests
 from bs4 import BeautifulSoup
+import requests
+import json
 
-nse_equity_url = "https://www.nseindia.com/get-quotes/equity?symbol="
-symbol = "RELIANCE"
+google_quote_base_url = "https://www.google.com/finance/quote/"
+company_symbol = "ITC"
+exchange_symbol = "NSE"
+quote_lpt_class = "YMlKec fxKbKc"
+description_class = "zzDege"
+percentage_change_class = "JwB6zf"
+CURRENCY_SYMBOLS = {"$": "USD", "₹": "INR"}
 
-url = nse_equity_url + symbol
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.162 Safari/537.36'}
-print("before extraction")
-with requests.session() as s:
+google_quote_fetch_url = google_quote_base_url + f"{company_symbol}:{exchange_symbol}"
 
-    response = s.get(url=url,headers=headers)
-    response = s.get(url=url,headers=headers)
+response = requests.get(google_quote_fetch_url)
+soup = BeautifulSoup(response.text,"html.parser")
+quote_ltp = ""
+ltp_content = soup.find(class_=quote_lpt_class)
+if ltp_content is not None:
+    quote_ltp = ltp_content.text
+print("quote_ltp", quote_ltp)
+currency = ""
+currency_symbol = quote_ltp[0]
+if currency_symbol in CURRENCY_SYMBOLS:
+    currency = CURRENCY_SYMBOLS[currency_symbol]
+    quote_ltp = quote_ltp[1:]
+else:
+    currency = "Unknown"
 
-    # print(response)
-    soup = BeautifulSoup(response.text, "html.parser")
-    print(soup)
-print("After extraction")
+percentage_change = soup.find_all(class_=percentage_change_class)[27].text
+print("percentage_change",percentage_change)
+amount_change = round(float(quote_ltp) * float(percentage_change[:-1])/100, 2)
+print("amount_change",amount_change)
+
+
+
+
+
+
