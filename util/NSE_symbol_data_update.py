@@ -6,7 +6,7 @@ import os
 
 # google_quote_base_url = "https://www.google.com/finance/quote/"
 # company_symbol = "ITC"
-# exchange_symbol = "NSE"
+exchange_symbol = "NSE"
 # quote_lpt_class = "YMlKec fxKbKc"
 # description_class = "zzDege"
 
@@ -68,47 +68,66 @@ description_class = "zzDege"
 # with open("nse_indices_list.json", "r") as symbols:
 #     nse_indices_list = json.load(symbols)
 # print(os.getcwd())
-with open("assets/NYSE_and_NYSE_MKT_Trading_Units_Daily_File.csv",'r+') as file:
-    nyse_df = pd.read_csv(file)
-    # print(nyse_df)
-us_indices_list=dict()
-print("nyse_df.columns",nyse_df.columns)
-for i in range(len(nyse_df)):
-    us_indices_list[nyse_df.loc[i,' Symbol']] = nyse_df.loc[i,'ï»¿ Company']
+# with open("assets/NYSE_and_NYSE_MKT_Trading_Units_Daily_File.csv",'r+') as file:
+#     nyse_df = pd.read_csv(file)
+#     # print(nyse_df)
+# us_indices_list=dict()
+# print("nyse_df.columns",nyse_df.columns)
+# for i in range(len(nyse_df)):
+#     us_indices_list[nyse_df.loc[i,' Symbol']] = nyse_df.loc[i,'ï»¿ Company']
 
-with open("assets/nasdaq_screener_1722961169521.csv",'r+') as file:
-    nasdaq_df = pd.read_csv(file)
-print("nasdaq_df.columns",nasdaq_df.columns)
-for i in range(len(nasdaq_df)):
-    nasdaq_symbol = nasdaq_df.loc[i,'Symbol']
-    nasdaq_company_name = nasdaq_df.loc[i,'Name']
-    if nasdaq_symbol not in us_indices_list:
-        us_indices_list[nasdaq_symbol] = nasdaq_company_name
-    else:
-        if us_indices_list[nasdaq_symbol] != nasdaq_company_name:
-            print(f"Anamoly ->>nasdaq_symbol={nasdaq_symbol},nasdaq_company_name={nasdaq_company_name},nyse_company_name={us_indices_list[nasdaq_symbol]}")   
-
-
-nyse_indices_list_updated = dict()
-nasdaq_indices_list_updated = dict()
-for company_symbol in us_indices_list:
-    for exchange_symbol in (NYSE_exchange_symbol,NASDAQ_exchange_symbol):
-        response = requests.get(google_quote_base_url + f"{company_symbol}:{exchange_symbol}")
-
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.text, "html.parser")
-            desc_content = soup.find(class_=description_class)
-            if desc_content is not None:
-                company_desc = desc_content.text
-                print(company_symbol, response.status_code,desc_content.text)
-                if exchange_symbol == NASDAQ_exchange_symbol:
-                    nasdaq_indices_list_updated[company_symbol] = company_desc
-                else:
-                    nyse_indices_list_updated[company_symbol] = company_desc
+# with open("assets/nasdaq_screener_1722961169521.csv",'r+') as file:
+#     nasdaq_df = pd.read_csv(file)
+# print("nasdaq_df.columns",nasdaq_df.columns)
+# for i in range(len(nasdaq_df)):
+#     nasdaq_symbol = nasdaq_df.loc[i,'Symbol']
+#     nasdaq_company_name = nasdaq_df.loc[i,'Name']
+#     if nasdaq_symbol not in us_indices_list:
+#         us_indices_list[nasdaq_symbol] = nasdaq_company_name
+#     else:
+#         if us_indices_list[nasdaq_symbol] != nasdaq_company_name:
+#             print(f"Anamoly ->>nasdaq_symbol={nasdaq_symbol},nasdaq_company_name={nasdaq_company_name},nyse_company_name={us_indices_list[nasdaq_symbol]}")   
 
 
-with open("nyse_indices_list.json", "w+") as symbols_updated:
-    json.dump(nyse_indices_list_updated,symbols_updated)
-with open("nasdaq_indices_list.json", "w+") as symbols_updated:
-    json.dump(nasdaq_indices_list_updated,symbols_updated)
+# nyse_indices_list_updated = dict()
+# nasdaq_indices_list_updated = dict()
+# for company_symbol in us_indices_list:
+#     for exchange_symbol in (NYSE_exchange_symbol,NASDAQ_exchange_symbol):
+#         response = requests.get(google_quote_base_url + f"{company_symbol}:{exchange_symbol}")
+
+#         if response.status_code == 200:
+#             soup = BeautifulSoup(response.text, "html.parser")
+#             desc_content = soup.find(class_=description_class)
+#             if desc_content is not None:
+#                 company_desc = desc_content.text
+#                 print(company_symbol, response.status_code,desc_content.text)
+#                 if exchange_symbol == NASDAQ_exchange_symbol:
+#                     nasdaq_indices_list_updated[company_symbol] = company_desc
+#                 else:
+#                     nyse_indices_list_updated[company_symbol] = company_desc
+
+
+# with open("nyse_indices_list.json", "w+") as symbols_updated:
+#     json.dump(nyse_indices_list_updated,symbols_updated)
+# with open("nasdaq_indices_list.json", "w+") as symbols_updated:
+#     json.dump(nasdaq_indices_list_updated,symbols_updated)
+# print("Files created")
+
+nse_company_list_updated = dict()
+# with open("assets/MCAP28032024.xlsx",'r+') as file:
+#     nse_df = pd.read_excel(file,encoding="utf8")
+nse_df = pd.read_excel("assets/MCAP28032024.xlsx")
+for i in range(len(nse_df)):
+    company_symbol = nse_df.loc[i,'Symbol']
+    response = requests.get(google_quote_base_url + f"{company_symbol}:{exchange_symbol}")
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, "html.parser")
+        desc_content = soup.find(class_=description_class)
+        if desc_content is not None:
+            print(company_symbol, response.status_code,desc_content.text)
+            nse_company_list_updated[company_symbol] = desc_content.text
+
+with open("nse_company_list_updated.json", "w+") as symbols_updated:
+    json.dump(nse_company_list_updated,symbols_updated)
 print("Files created")

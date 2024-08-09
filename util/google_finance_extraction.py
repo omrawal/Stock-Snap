@@ -102,7 +102,8 @@ class StockQuoteFetcher:
 
 
 def get_quotes_of_all_500_nse_companies():
-    with open("../assets/nse_500_companies_symbols.json", "r") as symbols_file:
+    # with open("../assets/nse_500_companies_symbols.json", "r") as symbols_file:
+    with open("../assets/nse_company_list_updated.json", "r") as symbols_file:
         company_symbol_list = json.load(symbols_file)
 
     exchange_symbol = "NSE"
