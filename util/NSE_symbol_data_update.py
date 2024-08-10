@@ -63,6 +63,8 @@ google_quote_base_url = "https://www.google.com/finance/quote/"
 company_symbol = ""
 NYSE_exchange_symbol = "NYSE"
 NASDAQ_exchange_symbol = "NASDAQ"
+NSE_INDEX_exchange_symbol = "INDEXNSE"
+BSE_INDEX_exchange_symbol = "INDEXBOM"
 description_class = "zzDege"
 
 # with open("nse_indices_list.json", "r") as symbols:
@@ -113,21 +115,41 @@ description_class = "zzDege"
 #     json.dump(nasdaq_indices_list_updated,symbols_updated)
 # print("Files created")
 
-nse_company_list_updated = dict()
-# with open("assets/MCAP28032024.xlsx",'r+') as file:
-#     nse_df = pd.read_excel(file,encoding="utf8")
-nse_df = pd.read_excel("assets/MCAP28032024.xlsx")
-for i in range(len(nse_df)):
-    company_symbol = nse_df.loc[i,'Symbol']
-    response = requests.get(google_quote_base_url + f"{company_symbol}:{exchange_symbol}")
+# nse_company_list_updated = dict()
+# # with open("assets/MCAP28032024.xlsx",'r+') as file:
+# #     nse_df = pd.read_excel(file,encoding="utf8")
+# nse_df = pd.read_excel("assets/MCAP28032024.xlsx")
+# for i in range(len(nse_df)):
+#     company_symbol = nse_df.loc[i,'Symbol']
+#     response = requests.get(google_quote_base_url + f"{company_symbol}:{exchange_symbol}")
+
+#     if response.status_code == 200:
+#         soup = BeautifulSoup(response.text, "html.parser")
+#         desc_content = soup.find(class_=description_class)
+#         if desc_content is not None:
+#             print(company_symbol, response.status_code,desc_content.text)
+#             nse_company_list_updated[company_symbol] = desc_content.text
+
+# with open("nse_company_list_updated.json", "w+") as symbols_updated:
+#     json.dump(nse_company_list_updated,symbols_updated)
+# print("Files created")
+
+nse_indices_list = dict()
+with open("assets/bse_indices_list.json", "r") as symbols_file:
+        company_symbol_list = json.load(symbols_file)
+
+for company_symbol in company_symbol_list:
+    response = requests.get(google_quote_base_url + f"{company_symbol}:{BSE_INDEX_exchange_symbol}")
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, "html.parser")
         desc_content = soup.find(class_=description_class)
         if desc_content is not None:
             print(company_symbol, response.status_code,desc_content.text)
-            nse_company_list_updated[company_symbol] = desc_content.text
+            nse_indices_list[company_symbol] = desc_content.text
 
-with open("nse_company_list_updated.json", "w+") as symbols_updated:
-    json.dump(nse_company_list_updated,symbols_updated)
+with open("bse_indices_list.json", "w+") as symbols_updated:
+    json.dump(nse_indices_list,symbols_updated)
 print("Files created")
+
+
