@@ -57,10 +57,8 @@ class StockQuoteFetcher:
     def fetch_quote(self):
         soup = self.fetch_soup()
         ltp_str_value = self.get_ltp_string(soup)
-        # print(soup)
         if ltp_str_value:
             self.ltp = ltp_str_value
-            # print("ltp_str_value",ltp_str_value)
             self.currency, self.currency_symbol = self.get_currency_and_symbol(ltp_str_value)
             if self.currency:
                 self.ltp = ltp_str_value[1:]
@@ -74,10 +72,6 @@ class StockQuoteFetcher:
             prev_close_currency, prev_close_currency_symbol = self.get_currency_and_symbol(prev_close_str_value)
             if prev_close_currency:
                 self.previous_close = prev_close_str_value[1:]
-        #     else:
-        #         print("prev_close_currency is None", prev_close_currency)
-        # else:
-        #     print("prev_close_str_value is None",prev_close_str_value)
 
         if self.ltp and self.previous_close:
             self.get_amount_change_and_percentage_change()
@@ -85,9 +79,6 @@ class StockQuoteFetcher:
         desc_content = soup.find(class_=self.description_class)
         if desc_content is not None:
             self.description = desc_content.text
-        # else:
-        #     print("desc_content is None", desc_content)
-
 
         return {
             'ltp': self.ltp,
@@ -101,9 +92,8 @@ class StockQuoteFetcher:
         }
 
 
-def get_quotes_of_all_500_nse_companies():
-    # with open("../assets/nse_500_companies_symbols.json", "r") as symbols_file:
-    with open("../assets/nse_company_list_updated.json", "r") as symbols_file:
+def get_quotes_of_all_nse_companies():
+    with open("../assets/nse_company_list.json", "r") as symbols_file:
         company_symbol_list = json.load(symbols_file)
 
     exchange_symbol = "NSE"
@@ -115,19 +105,21 @@ def get_quotes_of_all_500_nse_companies():
 
 
 def get_all_nse_indices():
-    with open("../assets/nse_indices_symbols.json", "r") as symbols_file:
+    with open("../assets/nse_indices_list.json", "r") as symbols_file:
         index_symbol_list = json.load(symbols_file)
 
     exchange_symbol = "INDEXNSE"
     for index_symbol in index_symbol_list:
         print(f"Checking for index_symbol: {index_symbol}")
-        if index_symbol == "SENSEX":
-            fetcher = StockQuoteFetcher(index_symbol, "INDEXBOM")
-        else:
-            fetcher = StockQuoteFetcher(index_symbol, exchange_symbol)
+        fetcher = StockQuoteFetcher(index_symbol, exchange_symbol)
         quote_data = fetcher.fetch_quote()
         print({index_symbol: quote_data})
 
 
-get_quotes_of_all_500_nse_companies()
+
+#TODO shrink these to include only 2 functions 1. get company quote 2. get index quote
+get_quotes_of_all_nse_companies()
+get_quotes_of_all_nyse_companies()
+get_quotes_of_all_nasdaq_companies()
 get_all_nse_indices()
+get_all_bse_indices()
