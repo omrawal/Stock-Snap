@@ -116,10 +116,18 @@ def get_all_nse_indices():
         print({index_symbol: quote_data})
 
 
+def get_all_quotes(json_file_path, exchange_symbol):
+    with open(json_file_path, "r") as symbols_file:
+        index_symbol_list = json.load(symbols_file)
+    for index_symbol in index_symbol_list:
+        print(f"Checking for index_symbol: {index_symbol}")
+        fetcher = StockQuoteFetcher(index_symbol, exchange_symbol)
+        quote_data = fetcher.fetch_quote()
+        print({index_symbol: quote_data})
 
-#TODO shrink these to include only 2 functions 1. get company quote 2. get index quote
-get_quotes_of_all_nse_companies()
-get_quotes_of_all_nyse_companies()
-get_quotes_of_all_nasdaq_companies()
-get_all_nse_indices()
-get_all_bse_indices()
+
+get_all_quotes(json_file_path="../assets/nse_indices_list.json", exchange_symbol="INDEXNSE")
+get_all_quotes(json_file_path="../assets/bse_indices_list.json", exchange_symbol="INDEXBOM")
+get_all_quotes(json_file_path="../assets/nse_company_list.json", exchange_symbol="NSE")
+get_all_quotes(json_file_path="../assets/nyse_company_list.json", exchange_symbol="NYSE")
+get_all_quotes(json_file_path="../assets/nasdaq_company_list.json", exchange_symbol="NASDAQ")
