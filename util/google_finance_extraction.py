@@ -126,8 +126,23 @@ def get_all_quotes(json_file_path, exchange_symbol):
         print({index_symbol: quote_data})
 
 
-get_all_quotes(json_file_path="../assets/nse_indices_list.json", exchange_symbol="INDEXNSE")
-get_all_quotes(json_file_path="../assets/bse_indices_list.json", exchange_symbol="INDEXBOM")
-get_all_quotes(json_file_path="../assets/nse_company_list.json", exchange_symbol="NSE")
-get_all_quotes(json_file_path="../assets/nyse_company_list.json", exchange_symbol="NYSE")
-get_all_quotes(json_file_path="../assets/nasdaq_company_list.json", exchange_symbol="NASDAQ")
+def get_quote(ticker_symbol,exchange_ticker_symbol):
+    try:
+        fetcher = StockQuoteFetcher(ticker_symbol,exchange_ticker_symbol)
+        quote_data = fetcher.fetch_quote()
+        return {ticker_symbol:quote_data}
+    except Exception as e:
+        return {"Some error occurred in fetching quote: ": e}
+
+
+# get_all_quotes(json_file_path="../assets/nse_indices_list.json", exchange_symbol="INDEXNSE")
+# get_all_quotes(json_file_path="../assets/bse_indices_list.json", exchange_symbol="INDEXBOM")
+# get_all_quotes(json_file_path="../assets/nse_company_list.json", exchange_symbol="NSE")
+# get_all_quotes(json_file_path="../assets/nyse_company_list.json", exchange_symbol="NYSE")
+# get_all_quotes(json_file_path="../assets/nasdaq_company_list.json", exchange_symbol="NASDAQ")
+
+print(get_quote("HDFCBANK", "NSE"))
+print(get_quote("HDB", "NYSE"))
+print(get_quote("GOOGL", "NASDAQ"))
+print(get_quote("SENSEX", "INDEXBOM"))
+print(get_quote("NIFTY_50", "INDEXNSE"))

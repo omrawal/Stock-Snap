@@ -1,0 +1,14 @@
+{"asia": [{
+  "Country": "Japan",
+  "link": "https://www.google.com/finance/quote/NI225:INDEXNIKKEI"
+},{
+  "Country": "HongKong",
+  "link": "https://www.google.com/finance/quote/HSI:INDEXHANGSENG"
+}],
+  "US": [
+    {"dow jones": "https://www.google.com/finance/quote/.DJI:INDEXDJX"},
+    {"SNP 500": "https://www.google.com/finance/quote/.INX:INDEXSP"},
+    {"NASDAQ": "https://www.google.com/finance/quote/.IXIC:INDEXNASDAQ"}
+  ]
+
+}
