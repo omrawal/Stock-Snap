@@ -397,5 +397,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .idea/
-util/raymond.html
-util/RELIANCE.html
+.env
