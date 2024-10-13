@@ -80,7 +80,7 @@ class StockQuoteFetcher:
         if desc_content is not None:
             self.description = desc_content.text
 
-        return {
+        return json.dumps({
             'ltp': self.ltp,
             'desc': self.description,
             "previous_close": self.previous_close,
@@ -89,7 +89,7 @@ class StockQuoteFetcher:
             "change_amount": self.change_amount,
             "currency_symbol": self.currency_symbol,
             "change_type": self.change_type
-        }
+        })
 
 
 def get_quotes_of_all_nse_companies():
@@ -135,14 +135,15 @@ def get_quote(ticker_symbol,exchange_ticker_symbol):
         return {"Some error occurred in fetching quote: ": e}
 
 
-# get_all_quotes(json_file_path="../assets/nse_indices_list.json", exchange_symbol="INDEXNSE")
-# get_all_quotes(json_file_path="../assets/bse_indices_list.json", exchange_symbol="INDEXBOM")
-# get_all_quotes(json_file_path="../assets/nse_company_list.json", exchange_symbol="NSE")
-# get_all_quotes(json_file_path="../assets/nyse_company_list.json", exchange_symbol="NYSE")
-# get_all_quotes(json_file_path="../assets/nasdaq_company_list.json", exchange_symbol="NASDAQ")
+if __name__ == "__main__":
+    # get_all_quotes(json_file_path="../assets/nse_indices_list.json", exchange_symbol="INDEXNSE")
+    # get_all_quotes(json_file_path="../assets/bse_indices_list.json", exchange_symbol="INDEXBOM")
+    # get_all_quotes(json_file_path="../assets/nse_company_list.json", exchange_symbol="NSE")
+    # get_all_quotes(json_file_path="../assets/nyse_company_list.json", exchange_symbol="NYSE")
+    # get_all_quotes(json_file_path="../assets/nasdaq_company_list.json", exchange_symbol="NASDAQ")
 
-print(get_quote("HDFCBANK", "NSE"))
-print(get_quote("HDB", "NYSE"))
-print(get_quote("GOOGL", "NASDAQ"))
-print(get_quote("SENSEX", "INDEXBOM"))
-print(get_quote("NIFTY_50", "INDEXNSE"))
+    print(get_quote("HDFCBANK", "NSE"))
+    print(get_quote("HDB", "NYSE"))
+    print(get_quote("GOOGL", "NASDAQ"))
+    print(get_quote("SENSEX", "INDEXBOM"))
+    print(get_quote("NIFTY_50", "INDEXNSE"))
