@@ -4,11 +4,17 @@
 },{
   "Country": "HongKong",
   "link": "https://www.google.com/finance/quote/HSI:INDEXHANGSENG"
+},{
+  "Country": "India",
+  "link": "https://www.google.com/finance/quote/SENSEX:INDEXBOM"
 }],
   "US": [
     {"dow jones": "https://www.google.com/finance/quote/.DJI:INDEXDJX"},
     {"SNP 500": "https://www.google.com/finance/quote/.INX:INDEXSP"},
     {"NASDAQ": "https://www.google.com/finance/quote/.IXIC:INDEXNASDAQ"}
+  ],
+  "UK": [
+    {"FTSE 100": "https://www.google.com/finance/quote/UKX:INDEXFTSE"}
   ]
 
 }
