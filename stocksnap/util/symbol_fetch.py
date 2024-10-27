@@ -23,7 +23,7 @@ class Extractor():
     def get_data(self, ticker_symbol):
         exchange_symbol = self.__find_symbol(ticker_symbol=ticker_symbol)
         exchange_symbol = list(exchange_symbol)
-        print("exchange_symbol",exchange_symbol)
+        # print("exchange_symbol",exchange_symbol)
         return exchange_symbol
 
 if __name__ == "__main__":
