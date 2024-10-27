@@ -1,5 +1,5 @@
-from util.google_finance_extraction import StockQuoteFetcher
-from util.symbol_fetch import Extractor
+from .util.google_finance_extraction import StockQuoteFetcher
+from .util.symbol_fetch import Extractor
 
 class StockSnap(object):
     """
@@ -20,8 +20,8 @@ class StockSnap(object):
             dict: A dictionary with exchange symbols as keys and their corresponding stock quote details as values.
         """
         response = {}
-        exchange_symbols = self.extractor.get_data(ticker_symbol=ticker_symbol)
+        exchange_symbols = self.extractor.get_data(ticker_symbol=ticker_symbol.upper())
         for exchange_symbol in exchange_symbols:
-            fetcher  = StockQuoteFetcher(company_symbol=ticker_symbol,exchange_symbol=exchange_symbol)
+            fetcher  = StockQuoteFetcher(company_symbol=ticker_symbol.upper(),exchange_symbol=exchange_symbol)
             response [exchange_symbol] = fetcher.fetch_quote()
         return response

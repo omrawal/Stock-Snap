@@ -1,1 +1,1 @@
-from stocksnap import StockSnap
+from .stocksnap import StockSnap

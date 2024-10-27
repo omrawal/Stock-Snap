@@ -20,8 +20,13 @@ setup(
     long_description_content_type="text/markdown",
     long_description=long_description,
     packages=find_packages(),
-    install_requires=['opencv-python', 'pyautogui', 'pyaudio'],
-    keywords=['python', 'video', 'stream', 'video stream', 'camera stream', 'sockets'],
+    include_package_data=True,
+    package_data={
+        # Include all JSON files from the assets folder
+        '': ['assets/*.json'],
+    },
+    install_requires=['beautifulsoup4', 'requests', 'bs4','urllib3'],
+    keywords=['python', 'stock', 'BSE', 'API', 'NSE', 'scraping', 'web scraping'],
     classifiers=[
         "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
