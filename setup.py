@@ -21,10 +21,10 @@ setup(
     long_description=long_description,
     packages=find_packages(),
     include_package_data=True,
-    package_data={
-        # Include all JSON files from the assets folder
-        '': ['assets/*.json'],
-    },
+    # package_data={
+    #     # Include all JSON files from the assets folder
+    #     '': ['assets/*.json'],
+    # },
     install_requires=['beautifulsoup4', 'requests', 'bs4','urllib3'],
     keywords=['python', 'stock', 'BSE', 'API', 'NSE', 'scraping', 'web scraping'],
     classifiers=[

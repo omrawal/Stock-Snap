@@ -1,5 +1,5 @@
 from .util.google_finance_extraction import StockQuoteFetcher
-from .util.symbol_fetch import Extractor
+import json
 
 class StockSnap(object):
     """
@@ -7,7 +7,11 @@ class StockSnap(object):
     This class is used to fetch real-time stock market data for a given ticker symbol across different exchanges.
     """
     def __init__(self) -> None:
-        self.extractor = Extractor()
+        self.exchange_symbols = ['NSE',
+                            'INDEXNSE',
+                            'INDEXBOM',
+                            'NYSE',
+                            'NASDAQ']
 
     def fetch_details(self,ticker_symbol) -> dict:
         """
@@ -20,8 +24,10 @@ class StockSnap(object):
             dict: A dictionary with exchange symbols as keys and their corresponding stock quote details as values.
         """
         response = {}
-        exchange_symbols = self.extractor.get_data(ticker_symbol=ticker_symbol.upper())
-        for exchange_symbol in exchange_symbols:
+        for exchange_symbol in self.exchange_symbols:
             fetcher  = StockQuoteFetcher(company_symbol=ticker_symbol.upper(),exchange_symbol=exchange_symbol)
-            response [exchange_symbol] = fetcher.fetch_quote()
-        return response
+            quote_response = json.loads(fetcher.fetch_quote())
+            if len(quote_response['ltp']) != 0:
+                response[exchange_symbol] = quote_response
+
+        return json.dumps(response)

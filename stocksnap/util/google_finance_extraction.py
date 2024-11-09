@@ -81,6 +81,8 @@ class StockQuoteFetcher:
             self.description = desc_content.text
 
         return json.dumps({
+            'ticker_symbol':self.company_symbol,
+            'exchange_symbol':self.exchange_symbol,
             'ltp': self.ltp,
             'desc': self.description,
             "previous_close": self.previous_close,
