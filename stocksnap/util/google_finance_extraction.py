@@ -37,7 +37,7 @@ class StockQuoteFetcher:
         ltp_content = soup.find(class_=self.quote_lpt_class)
         if ltp_content is not None:
             return ltp_content.text.replace(",", "")
-        print("LTP content is None")
+        # print("LTP content is None")
         return None
 
     def get_previous_close_string(self, soup):
@@ -46,7 +46,7 @@ class StockQuoteFetcher:
             previous_close_tag = BeautifulSoup(str(previous_close_content[0]), "html.parser")
             previous_close_value = previous_close_tag.find(class_="P6K39c").text.replace(",", "")
             return previous_close_value
-        print("Previous close content is None")
+        # print("Previous close content is None")
         return None
 
     def get_amount_change_and_percentage_change(self):
@@ -64,7 +64,8 @@ class StockQuoteFetcher:
                 self.ltp = ltp_str_value[1:]
 
         else:
-            print("LTP string value is None",ltp_str_value)
+            # print("LTP string value is None",ltp_str_value)
+            pass
 
         prev_close_str_value = self.get_previous_close_string(soup)
         if prev_close_str_value:
@@ -80,7 +81,9 @@ class StockQuoteFetcher:
         if desc_content is not None:
             self.description = desc_content.text
 
-        return {
+        return json.dumps({
+            'ticker_symbol':self.company_symbol,
+            'exchange_symbol':self.exchange_symbol,
             'ltp': self.ltp,
             'desc': self.description,
             "previous_close": self.previous_close,
@@ -89,42 +92,7 @@ class StockQuoteFetcher:
             "change_amount": self.change_amount,
             "currency_symbol": self.currency_symbol,
             "change_type": self.change_type
-        }
-
-
-def get_quotes_of_all_nse_companies():
-    with open("../assets/nse_company_list.json", "r") as symbols_file:
-        company_symbol_list = json.load(symbols_file)
-
-    exchange_symbol = "NSE"
-    for company_symbol in company_symbol_list:
-        print(f"Checking for company_symbol: {company_symbol}")
-        fetcher = StockQuoteFetcher(company_symbol, exchange_symbol)
-        quote_data = fetcher.fetch_quote()
-        print({company_symbol: quote_data})
-
-
-def get_all_nse_indices():
-    with open("../assets/nse_indices_list.json", "r") as symbols_file:
-        index_symbol_list = json.load(symbols_file)
-
-    exchange_symbol = "INDEXNSE"
-    for index_symbol in index_symbol_list:
-        print(f"Checking for index_symbol: {index_symbol}")
-        fetcher = StockQuoteFetcher(index_symbol, exchange_symbol)
-        quote_data = fetcher.fetch_quote()
-        print({index_symbol: quote_data})
-
-
-def get_all_quotes(json_file_path, exchange_symbol):
-    with open(json_file_path, "r") as symbols_file:
-        index_symbol_list = json.load(symbols_file)
-    for index_symbol in index_symbol_list:
-        print(f"Checking for index_symbol: {index_symbol}")
-        fetcher = StockQuoteFetcher(index_symbol, exchange_symbol)
-        quote_data = fetcher.fetch_quote()
-        print({index_symbol: quote_data})
-
+        })
 
 def get_quote(ticker_symbol,exchange_ticker_symbol):
     try:
@@ -135,14 +103,15 @@ def get_quote(ticker_symbol,exchange_ticker_symbol):
         return {"Some error occurred in fetching quote: ": e}
 
 
-# get_all_quotes(json_file_path="../assets/nse_indices_list.json", exchange_symbol="INDEXNSE")
-# get_all_quotes(json_file_path="../assets/bse_indices_list.json", exchange_symbol="INDEXBOM")
-# get_all_quotes(json_file_path="../assets/nse_company_list.json", exchange_symbol="NSE")
-# get_all_quotes(json_file_path="../assets/nyse_company_list.json", exchange_symbol="NYSE")
-# get_all_quotes(json_file_path="../assets/nasdaq_company_list.json", exchange_symbol="NASDAQ")
+if __name__ == "__main__":
+    # get_all_quotes(json_file_path="../assets/nse_indices_list.json", exchange_symbol="INDEXNSE")
+    # get_all_quotes(json_file_path="../assets/bse_indices_list.json", exchange_symbol="INDEXBOM")
+    # get_all_quotes(json_file_path="../assets/nse_company_list.json", exchange_symbol="NSE")
+    # get_all_quotes(json_file_path="../assets/nyse_company_list.json", exchange_symbol="NYSE")
+    # get_all_quotes(json_file_path="../assets/nasdaq_company_list.json", exchange_symbol="NASDAQ")
 
-print(get_quote("HDFCBANK", "NSE"))
-print(get_quote("HDB", "NYSE"))
-print(get_quote("GOOGL", "NASDAQ"))
-print(get_quote("SENSEX", "INDEXBOM"))
-print(get_quote("NIFTY_50", "INDEXNSE"))
+    print(get_quote("HDFCBANK", "NSE"))
+    print(get_quote("HDB", "NYSE"))
+    print(get_quote("GOOGL", "NASDAQ"))
+    print(get_quote("SENSEX", "INDEXBOM"))
+    print(get_quote("NIFTY_50", "INDEXNSE"))
