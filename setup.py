@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 DESCRIPTION = 'Fetch stock data via Google Finance'
 LONG_DESCRIPTION = 'A package that fetched data about stocks listed on NSE, BSE, NYSE, etc.'
 
@@ -19,16 +19,14 @@ setup(
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=long_description,
+    author_email = 'omrawal2801@gmail.com',
+    url = 'https://github.com/omrawal/Stock-Snap', 
     packages=find_packages(),
     include_package_data=True,
-    # package_data={
-    #     # Include all JSON files from the assets folder
-    #     '': ['assets/*.json'],
-    # },
     install_requires=['beautifulsoup4', 'requests', 'bs4','urllib3'],
     keywords=['python', 'stock', 'BSE', 'API', 'NSE', 'scraping', 'web scraping'],
     classifiers=[
-        "Development Status :: 1 - Planning",
+        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
         "Operating System :: Unix",
