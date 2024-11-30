@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 import json
 
 class StockQuoteFetcher:
+    """ 
+    A class to fetch stock quotes from Google Finance.
+    """
     CURRENCY_SYMBOLS = {"$": "USD", "₹": "INR"}
 
     def __init__(self, company_symbol, exchange_symbol):
@@ -22,18 +25,41 @@ class StockQuoteFetcher:
         self.change_type = "UP"
 
     def fetch_soup(self):
+        """ 
+        Fetch the HTML content of the Google Finance page for the stock. 
+        
+        Returns: 
+        BeautifulSoup object of the fetched HTML content. 
+        """
         url = f"{self.google_quote_base_url}{self.company_symbol}:{self.exchange_symbol}"
         response = requests.get(url)
         soup = BeautifulSoup(response.text, "html.parser")
         return soup
 
     def get_currency_and_symbol(self, value_string):
+        """ Extract the currency and its symbol from the value string. 
+        
+        Parameters: 
+        value_string : str : The string containing the currency symbol and value. 
+        
+        Returns: 
+        tuple : A tuple containing the currency name and symbol. 
+        """
         currency_symbol = value_string[0]
         if currency_symbol in self.CURRENCY_SYMBOLS:
             return self.CURRENCY_SYMBOLS[currency_symbol], currency_symbol
         return None, None
 
     def get_ltp_string(self, soup):
+        """ 
+        Extract the latest trading price (LTP) from the soup. 
+        
+        Parameters: 
+        soup : BeautifulSoup : The parsed HTML content. 
+        
+        Returns: 
+        str : The latest trading price as a string. 
+        """
         ltp_content = soup.find(class_=self.quote_lpt_class)
         if ltp_content is not None:
             return ltp_content.text.replace(",", "")
@@ -41,6 +67,15 @@ class StockQuoteFetcher:
         return None
 
     def get_previous_close_string(self, soup):
+        """ 
+        Extract the previous closing price from the soup. 
+        
+        Parameters: 
+        soup : BeautifulSoup : The parsed HTML content. 
+        
+        Returns: 
+        str : The previous closing price as a string. 
+        """
         previous_close_content = soup.find_all(class_=self.prev_close_class)
         if previous_close_content:
             previous_close_tag = BeautifulSoup(str(previous_close_content[0]), "html.parser")
@@ -50,11 +85,20 @@ class StockQuoteFetcher:
         return None
 
     def get_amount_change_and_percentage_change(self):
+        """ 
+        Calculate the amount change and percentage change in stock price. 
+        """
         self.change_amount = float(self.ltp) - float(self.previous_close)
         self.percentage_change = (abs(self.change_amount) * 100) / float(self.previous_close)
         self.change_type = "DOWN" if self.change_amount < 0 else "UP"
 
     def fetch_quote(self):
+        """ 
+        Fetch the stock quote and related information. 
+        
+        Returns: 
+        str : JSON string containing the stock information. 
+        """
         soup = self.fetch_soup()
         ltp_str_value = self.get_ltp_string(soup)
         if ltp_str_value:
@@ -95,6 +139,15 @@ class StockQuoteFetcher:
         })
 
 def get_quote(ticker_symbol,exchange_ticker_symbol):
+    """ 
+    Get the stock quote for a given ticker symbol and exchange symbol.
+    
+    Parameters: 
+    ticker_symbol : str : The stock ticker symbol. 
+    exchange_ticker_symbol : str : The stock exchange symbol. 
+    
+    Returns: dict : Dictionary containing the stock quote data. 
+    """
     try:
         fetcher = StockQuoteFetcher(ticker_symbol,exchange_ticker_symbol)
         quote_data = fetcher.fetch_quote()
