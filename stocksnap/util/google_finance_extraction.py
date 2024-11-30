@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
+
 class StockQuoteFetcher:
     """ 
     A class to fetch stock quotes from Google Finance.
@@ -15,8 +16,10 @@ class StockQuoteFetcher:
         self.quote_lpt_class = "YMlKec fxKbKc"
         self.description_class = "zzDege"
         self.prev_close_class = "gyFHrc"
+        self.long_desc_class = "bLLb2d"
         self.ltp = ""
         self.description = ""
+        self.long_desc = ""
         self.currency = ""
         self.currency_symbol = ""
         self.previous_close = ""
@@ -84,6 +87,22 @@ class StockQuoteFetcher:
         # print("Previous close content is None")
         return None
 
+    def get_long_description_string(self, soup):
+        """
+        Extract the long description of the company from the soup.
+
+        Parameters:
+        soup : BeautifulSoup : The parsed HTML content.
+
+        Returns:
+        str : The description of the company as a string.
+        """
+        long_desc_content = soup.find(class_=self.long_desc_class)
+        if long_desc_content is not None:
+            return long_desc_content.text
+        # print("Long description content is None")
+        return None
+
     def get_amount_change_and_percentage_change(self):
         """ 
         Calculate the amount change and percentage change in stock price. 
@@ -111,6 +130,10 @@ class StockQuoteFetcher:
             # print("LTP string value is None",ltp_str_value)
             pass
 
+        long_desc_string = self.get_long_description_string(soup)
+        if long_desc_string:
+            self.long_desc = long_desc_string
+
         prev_close_str_value = self.get_previous_close_string(soup)
         if prev_close_str_value:
             self.previous_close = prev_close_str_value
@@ -126,10 +149,11 @@ class StockQuoteFetcher:
             self.description = desc_content.text
 
         return json.dumps({
-            'ticker_symbol':self.company_symbol,
-            'exchange_symbol':self.exchange_symbol,
+            'ticker_symbol': self.company_symbol,
+            'exchange_symbol': self.exchange_symbol,
             'ltp': self.ltp,
             'desc': self.description,
+            "long_desc" : self.long_desc,
             "previous_close": self.previous_close,
             "currency": self.currency,
             "percentage_change": f"{self.percentage_change}%",
@@ -138,7 +162,8 @@ class StockQuoteFetcher:
             "change_type": self.change_type
         })
 
-def get_quote(ticker_symbol,exchange_ticker_symbol):
+
+def get_quote(ticker_symbol, exchange_ticker_symbol):
     """ 
     Get the stock quote for a given ticker symbol and exchange symbol.
     
@@ -149,9 +174,9 @@ def get_quote(ticker_symbol,exchange_ticker_symbol):
     Returns: dict : Dictionary containing the stock quote data. 
     """
     try:
-        fetcher = StockQuoteFetcher(ticker_symbol,exchange_ticker_symbol)
+        fetcher = StockQuoteFetcher(ticker_symbol, exchange_ticker_symbol)
         quote_data = fetcher.fetch_quote()
-        return {ticker_symbol:quote_data}
+        return {ticker_symbol: quote_data}
     except Exception as e:
         return {"Some error occurred in fetching quote: ": e}
 
