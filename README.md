@@ -16,10 +16,11 @@ Install the package using pip:
 pip install stock-snap
 ```
 Fetching Stock Details
-python
+```python
 ticker_symbol = 'AAPL'
 details = stock_snap.fetch_details(ticker_symbol)
 print(details)
+```
 ### Example Output
 
 The `fetch_details` method returns a dictionary with exchange symbols as keys and their corresponding stock quote details as values.
