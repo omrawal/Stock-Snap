@@ -11,7 +11,7 @@ class StockSnap(object):
     def __init__(self) -> None:
         self.exchange_symbols = {'NSE', 'INDEXNSE', 'INDEXBOM', 'NYSE',
                                  'NASDAQ', 'NI225', 'HSI', '.DJI', '.INX',
-                                 '.IXIC', 'UKX'}
+                                 '.IXIC', 'UKX','INDEXNIKKEI','INDEXHANGSENG','INDEXDJX','INDEXSP','INDEXNASDAQ','INDEXFTSE'}
 
     def fetch_details(self, ticker_symbol) -> str:
         """
