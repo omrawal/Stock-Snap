@@ -2,6 +2,9 @@
 
 Stock-Snap is a Python library for extracting real-time stock market data. It provides an easy-to-use interface for fetching stock quote details across various exchanges.
 
+## API REPO
+[https://github.com/omrawal/StockMarket-API](https://github.com/omrawal/StockMarket-API)
+
 ## Features
 
 - **Fetch Real-Time Data**: Retrieve real-time stock quotes for any ticker symbol.
